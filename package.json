@@ -1,0 +1,27 @@
+{
+  "name": "pi-node-inspect",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pi extension for attaching to Node.js inspector targets and surfacing logs and breakpoint state",
+  "pi": {
+    "extensions": ["./"]
+  },
+  "files": [
+    "index.ts",
+    "config.ts",
+    "tool-formatters.ts",
+    "source-map.ts",
+    "source-breakpoint-viewer.ts",
+    "README.md",
+    "tsconfig.json",
+    "inspector/"
+  ],
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": ">=0.74.0"
+  },
+  "dependencies": {
+    "@earendil-works/pi-ai": ">=0.74.0",
+    "@jridgewell/trace-mapping": "^0.3.28"
+  }
+}
