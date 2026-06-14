@@ -161,19 +161,23 @@ function updateUi(
   }
 
   const paused = state.getPaused()
-  const status = paused
-    ? `⏸ paused ${formatLocation(paused.callFrames[0], ctx.cwd)}`
-    : `🔌 inspect ${activeConnection.host}:${activeConnection.port}`
-  ctx.ui.setStatus(
-    STATUS_KEY,
-    ctx.ui.theme.fg(paused ? "warning" : "accent", status)
-  )
+  const theme = ctx.ui.theme
+  let statusText: string
+  if (paused) {
+    const location = formatLocation(paused.callFrames[0], ctx.cwd)
+    statusText = theme.bold(
+      theme.bg("toolErrorBg", theme.fg("error", ` ⏸ PAUSED  ${location} `))
+    )
+  } else {
+    statusText = theme.fg("accent", `🔌 inspect ${activeConnection.host}:${activeConnection.port}`)
+  }
+  ctx.ui.setStatus(STATUS_KEY, statusText)
 
   const lines: string[] = []
   if (paused?.callFrames[0]) {
-    lines.push(
-      `⏸ ${formatLocation(paused.callFrames[0], ctx.cwd)} · ${paused.reason ?? "paused"}`
-    )
+    const location = formatLocation(paused.callFrames[0], ctx.cwd)
+    const reason = paused.reason ?? "breakpoint"
+    lines.push(theme.bold(theme.fg("error", `⏸ PAUSED · ${location}`)) + theme.fg("muted", `  (${reason})`))
   }
   for (const entry of state.getRecentLogs(5)) {
     lines.push(`[${entry.level}] ${entry.text}`)
