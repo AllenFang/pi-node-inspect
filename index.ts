@@ -769,10 +769,12 @@ export default function piNodeInspect(pi: ExtensionAPI): void {
     description:
       "Set or browse breakpoints. Usage: /inspect-bp <file> | <file:line> [condition]",
     async handler(args, ctx) {
-      const [value, ...conditionParts] = args.trim().split(/\s+/)
-      if (!value) {
+      const [rawValue, ...conditionParts] = args.trim().split(/\s+/)
+      if (!rawValue) {
         throw new Error("Usage: /inspect-bp <file> | <file:line> [condition]")
       }
+      // Strip leading '@' inserted by Pi's file autocomplete (e.g. @src/foo.ts)
+      const value = rawValue.startsWith("@") ? rawValue.slice(1) : rawValue
 
       if (/^.*:\d+$/.test(value)) {
         const location = parseFileLineArg(value, ctx.cwd)
